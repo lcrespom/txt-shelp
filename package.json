@@ -1,0 +1,21 @@
+{
+  "name": "txt-shelp",
+  "version": "1.0.0",
+  "description": "Plain text version of shelp",
+  "keywords": [
+    "shell",
+    "zsh",
+    "helper"
+  ],
+  "license": "ISC",
+  "author": "Luis Crespo",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.1"
+  }
+}
