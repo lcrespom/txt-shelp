@@ -17,5 +17,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.7.1"
+  },
+  "dependencies": {
+    "keypress": "^0.2.1",
+    "node-terminal-menu": "^3.4.1"
   }
 }
