@@ -1,5 +1,16 @@
-export function getHistoryLines(): string[] {
-  return 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(
-    ' '
-  )
+import { execSync } from 'node:child_process'
+import { join } from 'node:path'
+
+function removeTimestamp(line: string): string {
+  const timestampRegex = /^:?\s?\d+:\d+;/
+  return line.replace(timestampRegex, '')
+}
+
+export function getHistoryLines(maxLines: number = 100): string[] {
+  const historyFile = join(process.env.HOME || process.env.USERPROFILE || '', '.zsh_history')
+  const output = execSync(`tail -n ${maxLines} "${historyFile}"`, { encoding: 'utf-8' })
+  return output
+    .split('\n: ')
+    .map(item => item.split('\n').join(''))
+    .map(removeTimestamp)
 }
