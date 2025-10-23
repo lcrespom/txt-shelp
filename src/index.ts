@@ -6,6 +6,7 @@ import { tableMenu, showCursor, hideCursor } from 'node-terminal-menu'
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
 import { getHistoryLines } from './history.ts'
+import { getColors } from './colors.ts'
 
 function getCommand() {
   return process.argv[2] || 'help'
@@ -43,7 +44,7 @@ async function cmdHistory() {
     columnWidth: width,
     scrollBarCol: width + 1,
     selection: items.length - 1,
-    //colors: this.initColors(),
+    colors: getColors(),
     done: menuDone
   })
   listenKeyboard(menu.keyHandler)
