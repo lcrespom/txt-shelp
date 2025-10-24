@@ -1,6 +1,3 @@
-import { stdin } from 'node:process'
-import * as readline from 'node:readline'
-
 // @ts-expect-error - CommonJS module without types
 import { tableMenu, showCursor, hideCursor } from 'node-terminal-menu'
 // @ts-expect-error - CommonJS module without types

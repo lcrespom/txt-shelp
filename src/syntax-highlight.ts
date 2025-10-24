@@ -1,12 +1,7 @@
-import {
-  BashAstNode,
-  ExpansionType,
-  NodeType,
-  NodeTypeNames,
-  builtins,
-  parseBash,
-  traverseAST
-} from './bash-parser'
+import chalk from 'chalk'
+
+import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser.ts'
+import type { BashAstNode, ExpansionType } from './bash-parser.ts'
 
 type TextHighlight = {
   type: number
@@ -76,7 +71,7 @@ function highlightComment(line: string, ast: BashAstNode, hls: TextHighlight[]) 
   }
 }
 
-export function highlight(line: string) {
+function highlight(line: string) {
   let ast = parseBash(line)
   let hls: TextHighlight[] = []
   if (!ast) return hls
@@ -85,23 +80,6 @@ export function highlight(line: string) {
   })
   highlightComment(line, ast, hls)
   return hls
-}
-
-export function colorize(line: string, hls: TextHighlight[], colorFunc = applyColor) {
-  if (hls.length == 0) return line
-  let pos = 0
-  let result = ''
-  for (let hl of hls) {
-    if (pos < hl.start) {
-      result += line.substring(pos, hl.start)
-    }
-    let chunk = line.substring(hl.start, hl.end + 1)
-    result += colorFunc(chunk, hl)
-    pos = hl.end + 1
-  }
-  let lastHL = hls.pop()
-  result += line.substring(lastHL!.end + 1)
-  return result
 }
 
 function applyColor(chunk: string, hl: TextHighlight) {
@@ -120,6 +98,30 @@ function applyColor(chunk: string, hl: TextHighlight) {
     quote: 'yellow',
     comment: 'blue'
   }
-  let colorName = hlColors[NodeTypeNames[hl.type]]
-  return colors.colorize(colorName, chunk)
+  let colorName = hlColors[NodeTypeNames[hl.type]] as keyof typeof chalk
+  const maybeFn = (chalk as any)[colorName]
+  if (typeof maybeFn === 'function') return maybeFn(chunk)
+  return chalk.reset(chunk)
+}
+
+function colorize(line: string, hls: TextHighlight[], colorFunc = applyColor) {
+  if (hls.length == 0) return line
+  let pos = 0
+  let result = ''
+  for (let hl of hls) {
+    if (pos < hl.start) {
+      result += line.substring(pos, hl.start)
+    }
+    let chunk = line.substring(hl.start, hl.end + 1)
+    result += colorFunc(chunk, hl)
+    pos = hl.end + 1
+  }
+  let lastHL = hls.pop()
+  result += line.substring(lastHL!.end + 1)
+  return result
+}
+
+export function highlightCommand(cmd: string) {
+  let hls = highlight(cmd)
+  return colorize(cmd, hls)
 }
