@@ -18,3 +18,5 @@
   - [ ] `cd` to selection
   - [ ] Filter etc
 - Other navigation shortcuts
+- Misc
+  - [ ] Capture all exceptions and show cursor before exiting
