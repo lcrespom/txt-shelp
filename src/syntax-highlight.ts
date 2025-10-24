@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 
-import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser.ts'
-import type { BashAstNode, ExpansionType } from './bash-parser.ts'
+import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser/parser.ts'
+import type { BashAstNode, ExpansionType } from './bash-parser/parser-types.ts'
 
 type TextHighlight = {
   type: number

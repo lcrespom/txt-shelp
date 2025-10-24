@@ -5,5 +5,7 @@
 - [ ] Filter from curent buffer
 - Colors
   - [ ] Setup palette
-  - [ ] Shell parser
-  - [ ] Syntax highlight items, memoize if required
+  - [ ] Make palette configurable
+  - [x] Shell parser
+  - [x] Syntax highlight lines
+  - [ ] memoize highlighted lines
