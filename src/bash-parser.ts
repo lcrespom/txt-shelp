@@ -22,7 +22,7 @@ export const NodeType = {
   comment: 12
 }
 
-export const NodeTypeNames = reverseObject(NodeType)
+export const NodeTypeNames: Record<number, keyof typeof NodeType> = reverseObject(NodeType)
 
 // prettier-ignore
 export const builtins = [
@@ -64,7 +64,7 @@ function reverseObject(obj: Record<string, any>) {
 
 export type BashAstNode =
   | Script
-  | CommandNodeTypes
+  | CommandNodeType
   | CaseItem
   | Name
   | CompoundList
@@ -75,21 +75,18 @@ export type BashAstNode =
   | CommandExpansion
   | ParameterExpansion
 
-// Base location type
-export type Location = {
-  start: {
-    row: number
-    col: number
-    char: number
-  }
-  end: {
-    row: number
-    col: number
-    char: number
-  }
+type NodePosition = {
+  row: number
+  col: number
+  char: number
 }
 
-type CommandNodeTypes =
+export type NodeLocation = {
+  start: NodePosition
+  end: NodePosition
+}
+
+type CommandNodeType =
   | LogicalExpression
   | Pipeline
   | Command
@@ -104,22 +101,22 @@ type CommandNodeTypes =
 // Node types
 type Script = {
   type: 'Script'
-  commands: Array<CommandNodeTypes>
-  loc?: Location
+  commands: Array<CommandNodeType>
+  loc?: NodeLocation
 }
 
 type Pipeline = {
   type: 'Pipeline'
   commands: Array<Command | Function | Subshell | For | Case | If | While | Until>
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type LogicalExpression = {
   type: 'LogicalExpression'
   op: string
-  left: CommandNodeTypes
-  right: CommandNodeTypes
-  loc?: Location
+  left: CommandNodeType
+  right: CommandNodeType
+  loc?: NodeLocation
 }
 
 type Command = {
@@ -127,7 +124,7 @@ type Command = {
   name?: Word
   prefix?: Array<AssignmentWord | Redirect>
   suffix?: Array<Word | Redirect>
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Function = {
@@ -135,26 +132,26 @@ type Function = {
   name: Name
   redirections?: Redirect[]
   body: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Name = {
   type: 'Name'
   text: string
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type CompoundList = {
   type: 'CompoundList'
-  commands: Array<CommandNodeTypes>
+  commands: Array<CommandNodeType>
   redirections?: Redirect[]
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Subshell = {
   type: 'Subshell'
   list: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type For = {
@@ -162,21 +159,21 @@ type For = {
   name: Name
   wordlist?: Word[]
   do: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Case = {
   type: 'Case'
   clause: Word
   cases: CaseItem[]
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type CaseItem = {
   type: 'CaseItem'
   pattern: Word[]
   body: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type If = {
@@ -184,21 +181,21 @@ type If = {
   clause: CompoundList
   then: CompoundList
   else?: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type While = {
   type: 'While'
   clause: CompoundList
   do: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Until = {
   type: 'Until'
   clause: CompoundList
   do: CompoundList
-  loc?: Location
+  loc?: NodeLocation
 }
 
 type Redirect = {
@@ -206,21 +203,25 @@ type Redirect = {
   op: string
   file: Word
   numberIo?: number
-  loc?: Location
+  loc?: NodeLocation
 }
+
+export type ExpansionType = ArithmeticExpansion | CommandExpansion | ParameterExpansion
+
+type ExpansionLocation = { start: number; end: number }
 
 type Word = {
   type: 'Word'
   text: string
-  expansion?: Array<ArithmeticExpansion | CommandExpansion | ParameterExpansion>
-  loc?: Location
+  expansion?: Array<ExpansionType>
+  loc?: NodeLocation
 }
 
 type AssignmentWord = {
   type: 'AssignmentWord'
   text: string
-  expansion?: Array<ArithmeticExpansion | CommandExpansion | ParameterExpansion>
-  loc?: Location
+  expansion?: Array<ExpansionType>
+  loc?: NodeLocation
 }
 
 // Expansion types
@@ -229,10 +230,7 @@ type ArithmeticExpansion = {
   expression: string
   resolved: boolean
   arithmeticAST: unknown // Uses Babel Parser AST
-  loc: {
-    start: number
-    end: number
-  }
+  loc: ExpansionLocation
 }
 
 type CommandExpansion = {
@@ -240,10 +238,7 @@ type CommandExpansion = {
   command: string
   resolved: boolean
   commandAST: BashAstNode
-  loc: {
-    start: number
-    end: number
-  }
+  loc: ExpansionLocation
 }
 
 type ParameterExpansion = {
@@ -252,10 +247,7 @@ type ParameterExpansion = {
   kind?: string
   word?: string
   op?: string
-  loc: {
-    start: number
-    end: number
-  }
+  loc: ExpansionLocation
 }
 
 export type BashNodeCB = (node: BashAstNode) => void
