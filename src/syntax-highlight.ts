@@ -85,20 +85,22 @@ function highlight(line: string) {
 function applyColor(chunk: string, hl: TextHighlight) {
   const hlColors = {
     unknown: 'reset',
-    program: 'green',
-    builtin: 'green',
+    program: '#a6e22e', // Green monokai (originally 'green')
+    builtin: '#a6e22e', // TODO add underline (originally 'green')
     command: 'green',
-    alias: 'green',
-    commandError: 'redBright',
+    alias: '#a6e22e', // TODO add underline (originally 'green')
+    commandError: '#f92672', // Fuchsia monokai (originally 'redBright')
     assignment: 'magentaBright',
     redirect: 'whiteBright',
-    parameter: 'cyan',
-    environment: 'magenta',
-    option: 'cyanBright',
-    quote: 'yellow',
-    comment: 'blue'
+    parameter: '#66d9ef', // Cyan monokai (originally 'cyan')
+    environment: '#e6db74', // VSCode monokai yellow (originally 'magenta')
+    option: '#ae81ff', // Purple monkai (originally 'cyanBright')
+    quote: '#fd971f', // Orange monokai (originally 'yellow'),
+    comment: '#666666' // Dark grey (originally 'blue')
   }
+
   let colorName = hlColors[NodeTypeNames[hl.type]] as keyof typeof chalk
+  if (colorName.startsWith('#')) return chalk.hex(colorName)(chunk)
   const maybeFn = (chalk as any)[colorName]
   if (typeof maybeFn === 'function') return maybeFn(chunk)
   return chalk.reset(chunk)
