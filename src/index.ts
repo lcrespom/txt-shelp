@@ -1,9 +1,8 @@
 // @ts-expect-error - CommonJS module without types
-import { tableMenu, showCursor, hideCursor } from 'node-terminal-menu'
+import { showCursor, hideCursor } from 'node-terminal-menu'
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
-import { getHistoryLines } from './history.ts'
-import { getColors } from './colors.ts'
+import { showHistoryPopup } from './history.ts'
 
 function getCommand() {
   return process.argv[2] || 'help'
@@ -13,9 +12,9 @@ function help() {
   console.log('Available commands: help, history')
 }
 
-function menuDone(selection: number) {
+function menuDone(line?: string) {
   process.stdout.clearScreenDown()
-  console.log('Selection: ' + selection)
+  console.log('Line: ' + line)
   showCursor()
   process.exit(0)
 }
@@ -30,21 +29,13 @@ function listenKeyboard(kbHandler: (ch: any, key: any) => void) {
 async function cmdHistory() {
   process.stdout.write('\n')
   hideCursor()
-  const items = getHistoryLines()
-  const maxWidth = items.reduce((max, item) => Math.max(max, item.length), 0)
-  const height = Math.min(process.stdout.rows - 10, items.length)
-  const width = Math.min(process.stdout.columns - 5, maxWidth + 1)
-  const menu = tableMenu({
-    items,
-    height,
-    columns: 1,
-    columnWidth: width,
-    scrollBarCol: width + 1,
-    selection: items.length - 1,
-    colors: getColors(),
-    done: menuDone
-  })
-  listenKeyboard(menu.keyHandler)
+  try {
+    const menu = showHistoryPopup(menuDone)
+    listenKeyboard(menu.keyHandler)
+  } catch (err) {
+    showCursor()
+    console.error('Error showing history menu:', err)
+  }
 }
 
 function main() {

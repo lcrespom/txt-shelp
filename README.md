@@ -1,11 +1,14 @@
 # ToDo
 
 - History
-  - [ ] Gather selection
+  - [x] Gather selection
+  - [x] Remove duplicates
   - [ ] Create shell script to register keyboard shortcuts and buffer
         replacement
   - [ ] Filter from curent buffer
   - [ ] Read history file from any shell, not just zsh
+  - [ ] Underline builtins
+  - [ ] Use which when possible (check performance)
   - Colors
     - [ ] Setup palette
     - [ ] Make palette configurable
