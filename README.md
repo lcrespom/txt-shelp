@@ -22,4 +22,5 @@
   - [ ] Filter etc
 - Other navigation shortcuts
 - Misc
-  - [ ] Capture all exceptions and show cursor before exiting
+  - [x] Capture all exceptions and show cursor before exiting
+  - [x] Use alternate screen buffer

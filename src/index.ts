@@ -14,8 +14,9 @@ function help() {
 
 function menuDone(line?: string) {
   process.stdout.clearScreenDown()
-  console.log('Line: ' + line)
+  normalScreen()
   showCursor()
+  console.log('Line: ' + line)
   process.exit(0)
 }
 
@@ -26,13 +27,23 @@ function listenKeyboard(kbHandler: (ch: any, key: any) => void) {
   process.stdin.on('keypress', kbHandler)
 }
 
+function alternateScreen() {
+  process.stdout.write('\x1b[?1049h') // Switch to alternate screen buffer
+  process.stdout.write('\x1b[2J\x1b[H\n') // Clear the screen and move cursor to top-left
+}
+
+function normalScreen() {
+  process.stdout.write('\x1b[?1049l')
+}
+
 async function cmdHistory() {
-  process.stdout.write('\n')
   hideCursor()
+  alternateScreen()
   try {
     const menu = showHistoryPopup(menuDone)
     listenKeyboard(menu.keyHandler)
   } catch (err) {
+    normalScreen()
     showCursor()
     console.error('Error showing history menu:', err)
   }
