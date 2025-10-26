@@ -5,7 +5,10 @@
   - [x] Remove duplicates
   - [ ] Create shell script to register keyboard shortcuts and buffer
         replacement
-  - [ ] Filter from curent buffer
+  - Filter history
+    - [ ] Interactive line editor to filter
+    - [ ] Gather initial buffer and used for initial filter
+    - [ ] Fuzzy filter, shelp style
   - [ ] Read history file from any shell, not just zsh
   - [ ] Underline builtins
   - [ ] Use which when possible (check performance)
