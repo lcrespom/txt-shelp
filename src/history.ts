@@ -1,6 +1,5 @@
 import { execSync } from 'node:child_process'
 import { join } from 'node:path'
-// @ts-expect-error - CommonJS module without types
 import { tableMenu } from 'node-terminal-menu'
 
 import { getColors } from './colors.ts'

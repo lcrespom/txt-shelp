@@ -1,5 +1,7 @@
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
+import type { TableMenuInstance } from 'node-terminal-menu'
+
 import { showHistoryPopup } from './history.ts'
 import {
   alternateScreen,
@@ -56,7 +58,7 @@ function editLine(line: string, ch: string) {
   return line
 }
 
-function listenKeyboard(kbHandler: (ch: string, key: KeypressKey) => void) {
+function listenKeyboard(menu: TableMenuInstance) {
   let line = ''
   moveCursor({ row: 1, col: 1 })
   process.stdin.setRawMode(true)
@@ -67,7 +69,7 @@ function listenKeyboard(kbHandler: (ch: string, key: KeypressKey) => void) {
     else {
       hideCursor()
       moveCursor({ row: 3, col: 1 })
-      kbHandler(ch, key)
+      menu.keyHandler(ch, key)
       moveCursor({ row: 1, col: line.length + 1 })
       showCursor()
     }
@@ -80,7 +82,7 @@ async function cmdHistory() {
   moveCursor({ row: 3, col: 1 })
   try {
     const menu = showHistoryPopup(menuDone)
-    listenKeyboard(menu.keyHandler)
+    listenKeyboard(menu)
   } catch (err) {
     normalScreen()
     showCursor()

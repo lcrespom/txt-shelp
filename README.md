@@ -7,6 +7,8 @@
         replacement
   - Filter history
     - [ ] Interactive line editor to filter
+    - [ ] Full keyboard support in interactive line editor (left, right, home,
+          end, delete...)
     - [ ] Gather initial buffer and used for initial filter
     - [ ] Fuzzy filter, shelp style
   - [ ] Read history file from any shell, not just zsh
