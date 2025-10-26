@@ -1,4 +1,4 @@
-import { cmdHistory } from './history.ts'
+import { HistoryPopup } from './history.ts'
 
 function getCommand() {
   return process.argv[2] || 'help'
@@ -12,12 +12,15 @@ function main() {
   const command = getCommand()
   switch (command) {
     case 'help':
-      return help()
+      help()
+      break
     case 'history':
-      return cmdHistory()
+      const historyPopup = new HistoryPopup()
+      historyPopup.cmdHistory()
+      break
     default:
       console.log(`Unknown command: ${command}`)
-      return help()
+      help()
   }
 }
 

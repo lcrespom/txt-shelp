@@ -6,11 +6,11 @@
   - [ ] Create shell script to register keyboard shortcuts and buffer
         replacement
   - Filter history
-    - [ ] Interactive line editor to filter
+    - [x] Interactive line editor to filter
     - [ ] Place line editor at the bottom of the menu
     - [ ] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
-    - [ ] Gather initial buffer and used for initial filter
+    - [ ] Gather initial buffer and use for initial filter
     - [ ] Fuzzy filter, shelp style
   - [ ] Read history file from any shell, not just zsh
   - [ ] Underline builtins
