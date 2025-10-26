@@ -59,7 +59,7 @@ declare module 'node-terminal-menu' {
     /**
      * Update the menu with new configuration
      */
-    update: (menuConfig: TableMenuConfig) => TableMenuInstance
+    update: (menuConfig: Partial<TableMenuConfig>) => TableMenuInstance
 
     /**
      * Current selection index
