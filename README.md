@@ -7,6 +7,7 @@
         replacement
   - Filter history
     - [ ] Interactive line editor to filter
+    - [ ] Place line editor at the bottom of the menu
     - [ ] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
     - [ ] Gather initial buffer and used for initial filter

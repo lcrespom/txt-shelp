@@ -3,24 +3,15 @@ import keypress from 'keypress'
 import type { TableMenuInstance } from 'node-terminal-menu'
 
 import { showHistoryPopup } from './history.ts'
+import { LineEditor } from './line-editor.ts'
 import {
   alternateScreen,
-  clearLine,
   clearScreen,
   hideCursor,
   moveCursor,
   normalScreen,
   showCursor
 } from './terminal.ts'
-
-type KeypressKey = {
-  name: string
-  sequence: string
-  code: string
-  ctrl: boolean
-  meta: boolean
-  shift: boolean
-}
 
 function getCommand() {
   return process.argv[2] || 'help'
@@ -38,39 +29,20 @@ function menuDone(line?: string) {
   process.exit(0)
 }
 
-function isBackspace(ch: string) {
-  return ch === '\u0008' || ch === '\u007F'
-}
-
-function isLineEditKey(ch: string, key: KeypressKey) {
-  //TODO handle more keys (left, right, delete, etc)
-  const code = ch ? ch.charCodeAt(0) : 0
-  return code == 8 || code >= 32
-}
-
-function editLine(line: string, ch: string) {
-  moveCursor({ row: 1, col: 1 })
-  clearLine()
-  //TODO handle more keys (left, right, delete, etc)
-  if (isBackspace(ch)) line = line.slice(0, -1)
-  else line += ch
-  process.stdout.write(line)
-  return line
-}
-
 function listenKeyboard(menu: TableMenuInstance) {
-  let line = ''
-  moveCursor({ row: 1, col: 1 })
+  const LINE_EDITOR_ROW = 1
+  moveCursor({ row: LINE_EDITOR_ROW, col: 1 })
   process.stdin.setRawMode(true)
   process.stdin.resume()
   keypress(process.stdin)
+  const lineEditor = new LineEditor('', LINE_EDITOR_ROW)
   process.stdin.on('keypress', async (ch, key) => {
-    if (isLineEditKey(ch, key)) line = editLine(line, ch)
+    if (lineEditor.isLineEditKey(ch, key)) lineEditor.editLine(ch, key)
     else {
       hideCursor()
       moveCursor({ row: 3, col: 1 })
       menu.keyHandler(ch, key)
-      moveCursor({ row: 1, col: line.length + 1 })
+      moveCursor(lineEditor.getCursorPosition())
       showCursor()
     }
   })
