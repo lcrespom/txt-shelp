@@ -36,33 +36,39 @@ function menuDone(line?: string) {
   process.exit(0)
 }
 
-let edt = ''
-
 function isBackspace(ch: string) {
   return ch === '\u0008' || ch === '\u007F'
 }
 
-function editLine(ch: string) {
+function isLineEditKey(ch: string, key: KeypressKey) {
+  //TODO handle more keys (left, right, delete, etc)
+  const code = ch ? ch.charCodeAt(0) : 0
+  return code == 8 || code >= 32
+}
+
+function editLine(line: string, ch: string) {
   moveCursor({ row: 1, col: 1 })
   clearLine()
-  if (isBackspace(ch)) edt = edt.slice(0, -1)
-  else edt += ch
-  process.stdout.write(edt)
+  //TODO handle more keys (left, right, delete, etc)
+  if (isBackspace(ch)) line = line.slice(0, -1)
+  else line += ch
+  process.stdout.write(line)
+  return line
 }
 
 function listenKeyboard(kbHandler: (ch: string, key: KeypressKey) => void) {
+  let line = ''
   moveCursor({ row: 1, col: 1 })
   process.stdin.setRawMode(true)
   process.stdin.resume()
   keypress(process.stdin)
   process.stdin.on('keypress', async (ch, key) => {
-    const code = ch ? ch.charCodeAt(0) : 0
-    if (code == 8 || code >= 32) editLine(ch) //TODO handle more keys (left, right, delete, etc)
+    if (isLineEditKey(ch, key)) line = editLine(line, ch)
     else {
       hideCursor()
       moveCursor({ row: 3, col: 1 })
       kbHandler(ch, key)
-      moveCursor({ row: 1, col: edt.length + 1 })
+      moveCursor({ row: 1, col: line.length + 1 })
       showCursor()
     }
   })
