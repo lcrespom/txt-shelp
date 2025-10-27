@@ -24,7 +24,7 @@ export class HistoryPopup {
   private items: string[] = []
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
-  private lineHighlighter: (line: string) => string = chalk.cyan
+  private lineHighlighter: (line: string) => string = chalk.hex('#58d1eb')
 
   constructor(items: string[], lineHighlighter?: (line: string) => string) {
     this.items = items
@@ -68,7 +68,7 @@ export class HistoryPopup {
   private getColors() {
     return {
       item: (i: string) => chalk.bgHex('#272822')(this.lineHighlighter(i)),
-      selectedItem: chalk.inverse,
+      selectedItem: chalk.inverse, // TODO: make background brighter, keep syntax highlight
       scrollArea: chalk.bgHex('#272822'),
       scrollBar: chalk.whiteBright
     }

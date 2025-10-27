@@ -10,6 +10,7 @@
   - Filter history
     - [x] Interactive line editor to filter
     - [x] Fix bug: empty item list
+    - [ ] Fix command parser bug: some commands fail to parse
     - [ ] Place line editor at the bottom of the menu
     - [ ] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
