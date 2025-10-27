@@ -19,7 +19,7 @@
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines
-    - [ ] Show syntax highlight in selection, just change background
+    - [x] Show syntax highlight in selection, just change background
     - [ ] Highlight matched text (complex)
     - [ ] Make palette configurable
     - [ ] memoize highlighted lines => just memoize which, when implemented
