@@ -1,3 +1,4 @@
+import { addCwdToHistory } from './dir-history.ts'
 import { HistoryPopup } from './history.ts'
 
 function getCommand() {
@@ -5,7 +6,7 @@ function getCommand() {
 }
 
 function help() {
-  console.log('Available commands: help, history')
+  console.log('This tool should only be called via the "zeek.zsh" script.')
 }
 
 function main() {
@@ -17,6 +18,9 @@ function main() {
     case 'history':
       const historyPopup = new HistoryPopup()
       historyPopup.cmdHistory(process.argv[3], process.argv[4])
+      break
+    case 'store-dir':
+      addCwdToHistory()
       break
     default:
       console.log(`Unknown command: ${command}`)

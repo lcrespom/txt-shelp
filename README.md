@@ -23,10 +23,9 @@
     - [ ] Make palette configurable
     - [ ] memoize highlighted lines => just memoize which, when implemented
 - Dir History
-  - [ ] Create shell script part to add dirs to ~/.dirHistory
+  - [x] Create shell script part to add dirs to ~/.dir_history
   - [ ] Implement menu
   - [ ] `cd` to selection
-  - [ ] Filter etc
 - Misc
   - [x] Capture all exceptions and show cursor before exiting
   - [x] Use alternate screen buffer

@@ -14,8 +14,7 @@ alias zeek='node $zeek_dir/../index.ts </dev/tty 3>&1 1>&2'
 
 # Record every time the user changes directory
 function chpwd() {
-    # TODO implement store-dir command
-    # zeek store-dir "$PWD"
+    zeek store-dir "$PWD"
 }
 
 # Open Zeek dir history popup
