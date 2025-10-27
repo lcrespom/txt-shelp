@@ -19,6 +19,8 @@ import {
 // TODO read from configuration file
 const LINE_EDITOR_ROW = 1
 const MENU_ROW = 3
+const MENU_BG_COLOR = '#1d1e1a'
+const MENU_BG_SEL_COLOR = '#4a483a'
 
 export class HistoryPopup {
   private items: string[] = []
@@ -67,9 +69,9 @@ export class HistoryPopup {
 
   private getColors() {
     return {
-      item: (i: string) => chalk.bgHex('#272822')(this.lineHighlighter(i)),
-      selectedItem: chalk.inverse, // TODO: make background brighter, keep syntax highlight
-      scrollArea: chalk.bgHex('#272822'),
+      item: (i: string) => chalk.bgHex(MENU_BG_COLOR)(this.lineHighlighter(i)),
+      selectedItem: (i: string) => chalk.bgHex(MENU_BG_SEL_COLOR)(this.lineHighlighter(i)),
+      scrollArea: chalk.bgHex(MENU_BG_COLOR),
       scrollBar: chalk.whiteBright
     }
   }
@@ -77,7 +79,7 @@ export class HistoryPopup {
   private updateMenu(line: string) {
     moveCursor({ row: MENU_ROW, col: 1 })
     this.filteredItems = this.filterItems(this.items, line)
-    if (this.filteredItems.length === 0) this.filteredItems = ['<No matches>']
+    if (this.filteredItems.length === 0) this.filteredItems = ['# 🤷 No matches']
     this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
   }
 
