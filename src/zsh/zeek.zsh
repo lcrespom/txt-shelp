@@ -19,10 +19,10 @@ function chpwd() {
 
 # Open Zeek dir history popup
 function dir_history_popup() {
-    local new_dir=$(zeek dir-history)
+    local new_dir=$(zeek dir-history "$LBUFFER" "$RBUFFER")
     if [[ -n "$new_dir" ]]; then
         echo
-        cd $new_dir
+        cd ${~new_dir}  # Use ${~var} to allow for tilde expansion
         zle reset-prompt
     fi
 }

@@ -24,8 +24,8 @@
     - [ ] memoize highlighted lines => just memoize which, when implemented
 - Dir History
   - [x] Create shell script part to add dirs to ~/.dir_history
-  - [ ] Implement menu
-  - [ ] `cd` to selection
+  - [x] Implement menu
+  - [x] `cd` to selection
 - Misc
   - [x] Capture all exceptions and show cursor before exiting
   - [x] Use alternate screen buffer

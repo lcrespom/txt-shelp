@@ -24,7 +24,7 @@ export class HistoryPopup {
   private items: string[] = []
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
-  private lineHighlighter: (line: string) => string = line => line
+  private lineHighlighter: (line: string) => string = chalk.cyan
 
   constructor(items: string[], lineHighlighter?: (line: string) => string) {
     this.items = items

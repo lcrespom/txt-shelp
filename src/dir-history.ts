@@ -42,9 +42,3 @@ export function getDirHistory() {
     dir.startsWith(homeDir) ? '~' + dir.substring(homeDir.length) : dir
   )
 }
-
-export function relativeToAbsolute(dir: string) {
-  const homeDir = getHomeDirectory()
-  if (dir.startsWith('~')) dir = homeDir + dir.substring(1)
-  return dir
-}
