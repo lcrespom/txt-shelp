@@ -14,12 +14,12 @@
     - [ ] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
     - [x] Gather initial buffer and use for initial filter
-    - [ ] Fuzzy filter, shelp style
+    - [x] Fuzzy filter, shelp style
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines
     - [ ] Show syntax highlight in selection, just change background
-    - [ ] Highlight matched text
+    - [ ] Highlight matched text (complex)
     - [ ] Make palette configurable
     - [ ] memoize highlighted lines => just memoize which, when implemented
 - Dir History

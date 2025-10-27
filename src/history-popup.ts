@@ -105,9 +105,16 @@ export class HistoryPopup {
     })
   }
 
+  private multiMatch(line: string, words: string[]) {
+    for (let w of words) {
+      if (!line.includes(w)) return false
+    }
+    return true
+  }
+
   private filterItems(items: string[], filter: string): string[] {
-    filter = filter.toLowerCase()
-    return items.filter(item => item.toLowerCase().includes(filter.toLowerCase()))
+    const words = filter.toLowerCase().split(' ')
+    return items.filter(item => this.multiMatch(item.toLowerCase(), words))
   }
 
   private menuDone(line?: string) {
