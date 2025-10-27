@@ -1,5 +1,6 @@
+import { getCommandHistory } from './cmd-history.ts'
 import { addCwdToHistory } from './dir-history.ts'
-import { HistoryPopup } from './history.ts'
+import { HistoryPopup } from './history-popup.ts'
 
 function getCommand() {
   return process.argv[2] || 'help'
@@ -16,8 +17,8 @@ function main() {
       help()
       break
     case 'history':
-      const historyPopup = new HistoryPopup()
-      historyPopup.cmdHistory(process.argv[3], process.argv[4])
+      const popup = new HistoryPopup(getCommandHistory())
+      popup.openHistoryPopup(process.argv[3], process.argv[4])
       break
     case 'store-dir':
       addCwdToHistory()

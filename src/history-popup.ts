@@ -1,6 +1,4 @@
 import fs from 'node:fs'
-import { execSync } from 'node:child_process'
-import { join } from 'node:path'
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
 import './table-menu.d.ts'
@@ -21,42 +19,23 @@ import {
 // TODO read from configuration file
 const LINE_EDITOR_ROW = 1
 const MENU_ROW = 3
-const HISTORY_FILE = '.zsh_history'
-const MAX_HISTORY_LINES = 1000
-
-function removeTimestamp(line: string): string {
-  const timestampRegex = /^:?\s?\d+:\d+;/
-  return line.replace(timestampRegex, '')
-}
-
-function removeDuplicates(lines: string[]): string[] {
-  return [...new Set(lines.reverse())].reverse()
-}
-
-function getHistoryLines(maxLines: number = MAX_HISTORY_LINES): string[] {
-  const historyPath = join(process.env.HOME || process.env.USERPROFILE || '', HISTORY_FILE)
-  const output = execSync(`tail -n ${maxLines} "${historyPath}"`, { encoding: 'utf-8' })
-  return removeDuplicates(
-    output
-      .split('\n: ')
-      .map(item => item.split('\n').join(''))
-      .map(removeTimestamp)
-  )
-}
 
 export class HistoryPopup {
   private items: string[] = []
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
 
-  cmdHistory(lbuffer: string = '', rbuffer: string = '') {
+  constructor(items: string[]) {
+    this.items = items
+    this.filteredItems = items
+  }
+
+  openHistoryPopup(lbuffer: string = '', rbuffer: string = '') {
     alternateScreen()
     clearScreen()
     moveCursor({ row: MENU_ROW, col: 1 })
     try {
-      this.items = getHistoryLines()
-      this.filteredItems = this.items
-      this.menu = this.showHistoryPopup()
+      this.menu = this.createMenu()
       this.listenKeyboard(lbuffer, rbuffer)
     } catch (err) {
       normalScreen()
@@ -65,7 +44,7 @@ export class HistoryPopup {
     }
   }
 
-  private showHistoryPopup() {
+  private createMenu() {
     const maxWidth = this.items.reduce((max, item) => Math.max(max, item.length), 0)
     const height = Math.min(process.stdout.rows - 10, this.items.length)
     const width = Math.min(process.stdout.columns - 5, maxWidth + 1)
