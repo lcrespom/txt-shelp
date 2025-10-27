@@ -1,11 +1,11 @@
 import fs from 'node:fs'
+import chalk from 'chalk'
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
 import './table-menu.d.ts'
 import { tableMenu } from 'node-terminal-menu'
 import type { TableMenuInstance } from 'node-terminal-menu'
 
-import { getColors } from './colors.ts'
 import { LineEditor } from './line-editor.ts'
 import {
   alternateScreen,
@@ -24,10 +24,12 @@ export class HistoryPopup {
   private items: string[] = []
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
+  private lineHighlighter: (line: string) => string = line => line
 
-  constructor(items: string[]) {
+  constructor(items: string[], lineHighlighter?: (line: string) => string) {
     this.items = items
     this.filteredItems = items
+    if (lineHighlighter) this.lineHighlighter = lineHighlighter
   }
 
   openHistoryPopup(lbuffer: string = '', rbuffer: string = '') {
@@ -55,12 +57,21 @@ export class HistoryPopup {
       columnWidth: width,
       scrollBarCol: width + 1,
       selection: this.items.length - 1,
-      colors: getColors(),
+      colors: this.getColors(),
       done: (item: number) => {
         const line = item >= 0 ? this.filteredItems[item] : undefined
         this.menuDone(line)
       }
     })
+  }
+
+  private getColors() {
+    return {
+      item: (i: string) => chalk.bgHex('#272822')(this.lineHighlighter(i)),
+      selectedItem: chalk.inverse,
+      scrollArea: chalk.bgHex('#272822'),
+      scrollBar: chalk.whiteBright
+    }
   }
 
   private updateMenu(line: string) {
