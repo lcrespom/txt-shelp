@@ -3,19 +3,18 @@
 - History
   - [x] Gather selection
   - [x] Remove duplicates
-  - [ ] Create shell script to register keyboard shortcuts and buffer
+  - [x] Create shell script to register keyboard shortcuts and buffer
         replacement
-  - [ ] Read history file from any shell, not just zsh
   - [ ] Underline builtins
   - [ ] Use which when possible (check performance)
   - Filter history
     - [x] Interactive line editor to filter
+    - [x] Fix bug: empty item list
     - [ ] Place line editor at the bottom of the menu
     - [ ] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
-    - [ ] Gather initial buffer and use for initial filter
+    - [x] Gather initial buffer and use for initial filter
     - [ ] Fuzzy filter, shelp style
-    - [x] Fix bug: empty item list
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines

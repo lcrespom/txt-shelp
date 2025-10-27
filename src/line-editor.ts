@@ -30,11 +30,15 @@ export class LineEditor {
   }
 
   editLine(ch: string, key: KeypressKey) {
-    moveCursor({ row: this.row, col: 1 })
-    clearLine()
     //TODO handle more keys (left, right, delete, etc)
     if (this.isBackspace(ch)) this.line = this.line.slice(0, -1)
     else this.line += ch
+    this.showLine()
+  }
+
+  showLine() {
+    moveCursor({ row: this.row, col: 1 })
+    clearLine()
     process.stdout.write(this.line)
   }
 

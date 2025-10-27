@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import { execSync } from 'node:child_process'
 import { join } from 'node:path'
 // @ts-expect-error - CommonJS module without types
@@ -48,7 +49,7 @@ export class HistoryPopup {
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
 
-  async cmdHistory() {
+  cmdHistory(lbuffer: string = '', rbuffer: string = '') {
     alternateScreen()
     clearScreen()
     moveCursor({ row: MENU_ROW, col: 1 })
@@ -56,7 +57,7 @@ export class HistoryPopup {
       this.items = getHistoryLines()
       this.filteredItems = this.items
       this.menu = this.showHistoryPopup()
-      this.listenKeyboard()
+      this.listenKeyboard(lbuffer, rbuffer)
     } catch (err) {
       normalScreen()
       showCursor()
@@ -83,20 +84,28 @@ export class HistoryPopup {
     })
   }
 
-  private listenKeyboard() {
+  private updateMenu(line: string) {
+    moveCursor({ row: MENU_ROW, col: 1 })
+    this.filteredItems = this.filterItems(this.items, line)
+    if (this.filteredItems.length === 0) this.filteredItems = ['<No matches>']
+    this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
+  }
+
+  private listenKeyboard(lbuffer: string, rbuffer: string) {
     moveCursor({ row: LINE_EDITOR_ROW, col: 1 })
     process.stdin.setRawMode(true)
     process.stdin.resume()
     keypress(process.stdin)
-    const lineEditor = new LineEditor('', LINE_EDITOR_ROW)
+    const lineEditor = new LineEditor(lbuffer, LINE_EDITOR_ROW)
+    if (lbuffer || rbuffer) {
+      this.updateMenu(lineEditor.getLine())
+      lineEditor.showLine()
+    }
     process.stdin.on('keypress', async (ch, key) => {
       hideCursor()
       if (lineEditor.isLineEditKey(ch, key)) {
         lineEditor.editLine(ch, key)
-        moveCursor({ row: MENU_ROW, col: 1 })
-        this.filteredItems = this.filterItems(this.items, lineEditor.getLine())
-        if (this.filteredItems.length === 0) this.filteredItems = ['<No matches>']
-        this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
+        this.updateMenu(lineEditor.getLine())
       } else {
         moveCursor({ row: MENU_ROW, col: 1 })
         this.menu.keyHandler(ch, key)
@@ -112,10 +121,13 @@ export class HistoryPopup {
   }
 
   private menuDone(line?: string) {
-    process.stdout.clearScreenDown()
     normalScreen()
     showCursor()
-    console.log('Line: ' + line)
+    if (line) {
+      const fd3 = fs.openSync('/dev/fd/3', 'w')
+      fs.writeSync(fd3, line)
+      fs.closeSync(fd3)
+    }
     process.exit(0)
   }
 }

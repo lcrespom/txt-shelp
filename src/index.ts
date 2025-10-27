@@ -16,7 +16,7 @@ function main() {
       break
     case 'history':
       const historyPopup = new HistoryPopup()
-      historyPopup.cmdHistory()
+      historyPopup.cmdHistory(process.argv[3], process.argv[4])
       break
     default:
       console.log(`Unknown command: ${command}`)
