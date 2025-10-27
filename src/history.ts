@@ -17,9 +17,11 @@ import {
   showCursor
 } from './terminal.ts'
 
+// TODO read from configuration file
 const LINE_EDITOR_ROW = 1
 const MENU_ROW = 3
 const HISTORY_FILE = '.zsh_history'
+const MAX_HISTORY_LINES = 1000
 
 function removeTimestamp(line: string): string {
   const timestampRegex = /^:?\s?\d+:\d+;/
@@ -30,7 +32,7 @@ function removeDuplicates(lines: string[]): string[] {
   return [...new Set(lines.reverse())].reverse()
 }
 
-function getHistoryLines(maxLines: number = 1000): string[] {
+function getHistoryLines(maxLines: number = MAX_HISTORY_LINES): string[] {
   const historyPath = join(process.env.HOME || process.env.USERPROFILE || '', HISTORY_FILE)
   const output = execSync(`tail -n ${maxLines} "${historyPath}"`, { encoding: 'utf-8' })
   return removeDuplicates(
@@ -93,6 +95,7 @@ export class HistoryPopup {
         lineEditor.editLine(ch, key)
         moveCursor({ row: MENU_ROW, col: 1 })
         this.filteredItems = this.filterItems(this.items, lineEditor.getLine())
+        if (this.filteredItems.length === 0) this.filteredItems = ['<No matches>']
         this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
       } else {
         moveCursor({ row: MENU_ROW, col: 1 })
