@@ -10,12 +10,12 @@
   - Filter history
     - [x] Interactive line editor to filter
     - [x] Fix bug: empty item list
-    - [ ] Fix command parser bug: some commands fail to parse
-    - [ ] Place line editor at the bottom of the menu
-    - [ ] Full keyboard support in interactive line editor (left, right, home,
+    - [x] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
     - [x] Gather initial buffer and use for initial filter
     - [x] Fuzzy filter, shelp style
+    - [ ] Fix command parser bug: some commands fail to parse
+    - [ ] Place line editor at the bottom of the menu
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines
@@ -30,5 +30,5 @@
 - Misc
   - [x] Capture all exceptions and show cursor before exiting
   - [x] Use alternate screen buffer
-  - [ ] Other navigation shortcuts
+  - [x] Other navigation shortcuts
   - [ ] Read configuration from config file

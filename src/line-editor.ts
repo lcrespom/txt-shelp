@@ -28,8 +28,8 @@ export class LineEditor {
   }
 
   isLineEditKey(ch: string, key: KeypressKey): boolean {
-    //console.log('\n' + JSON.stringify({ ch, key }))
     if (!ch && EDITOR_KEYS.includes(key.name)) return true
+    if (key && key.meta && (key.name === 'b' || key.name === 'f')) return true // alt-left or alt-right
     return ch === BACKSPACE1 || ch === CTRL_A || ch === CTRL_E || ch?.charCodeAt(0) >= 32
   }
 
@@ -56,6 +56,48 @@ export class LineEditor {
         return this.goHome()
       case 'end':
         return this.goEnd()
+      case 'b':
+        if (key.meta) return this.backwardWord()
+      case 'f':
+        if (key.meta) return this.forwardWord()
+    }
+  }
+
+  isLetterOrNum(ch: string) {
+    if (ch >= '0' && ch <= '9') return true
+    return ch.toLowerCase() != ch.toUpperCase()
+  }
+
+  isStartOfWord(str: string, pos: number) {
+    if (pos <= 0) return true
+    return this.isLetterOrNum(str[pos]) && !this.isLetterOrNum(str[pos - 1])
+  }
+
+  isEndOfWord(str: string, pos: number) {
+    if (pos >= str.length) return true
+    return !this.isLetterOrNum(str[pos]) && this.isLetterOrNum(str[pos - 1])
+  }
+
+  backwardWord() {
+    if (this.left.length == 0) return
+    for (let pos = this.left.length - 1; pos >= 0; pos--) {
+      if (this.isStartOfWord(this.left, pos)) {
+        const tmp = this.left.substring(0, pos)
+        this.right = this.left.substring(pos) + this.right
+        this.left = tmp
+        break
+      }
+    }
+  }
+
+  forwardWord() {
+    if (this.right.length == 0) return
+    for (let pos = 1; pos <= this.right.length; pos++) {
+      if (this.isEndOfWord(this.right, pos)) {
+        this.left = this.left + this.right.substring(0, pos)
+        this.right = this.right.substring(pos)
+        break
+      }
     }
   }
 
@@ -70,7 +112,6 @@ export class LineEditor {
   }
 
   editLine(ch: string, key?: KeypressKey) {
-    //TODO handle more keys (alt-left, alt-right)
     if (!ch && key) this.handleNavigationKey(key)
     else if (this.isBackspace(ch)) this.left = this.left.slice(0, -1)
     else if (ch === CTRL_A) this.goHome()
