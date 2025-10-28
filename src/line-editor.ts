@@ -10,43 +10,87 @@ export type KeypressKey = {
   shift: boolean
 }
 
+const EDITOR_KEYS = ['delete', 'left', 'right', 'home', 'end']
+
+const BACKSPACE1 = '\u0008'
+const BACKSPACE2 = '\u007F'
+const CTRL_A = '\u0001'
+const CTRL_E = '\u0005'
+
 export class LineEditor {
-  private line: string = ''
+  private left: string = ''
+  private right: string = ''
   private row: number
 
   constructor(initialLine: string = '', row: number = 1) {
-    this.line = initialLine
+    this.left = initialLine
     this.row = row
   }
 
   isLineEditKey(ch: string, key: KeypressKey): boolean {
-    //TODO handle more keys (left, right, delete, etc)
-    const code = ch ? ch.charCodeAt(0) : 0
-    return code == 8 || code >= 32
+    //console.log('\n' + JSON.stringify({ ch, key }))
+    if (!ch && EDITOR_KEYS.includes(key.name)) return true
+    return ch === BACKSPACE1 || ch === CTRL_A || ch === CTRL_E || ch?.charCodeAt(0) >= 32
   }
 
   isBackspace(ch: string): boolean {
-    return ch === '\u0008' || ch === '\u007F'
+    return ch === BACKSPACE1 || ch === BACKSPACE2
   }
 
-  editLine(ch: string, key: KeypressKey) {
-    //TODO handle more keys (left, right, delete, etc)
-    if (this.isBackspace(ch)) this.line = this.line.slice(0, -1)
-    else this.line += ch
+  handleNavigationKey(key: KeypressKey) {
+    switch (key.name) {
+      case 'delete':
+        if (this.right.length > 0) this.right = this.right.slice(1)
+        break
+      case 'left':
+        if (this.left.length <= 0) return
+        this.right = this.left.slice(-1) + this.right
+        this.left = this.left.slice(0, -1)
+        break
+      case 'right':
+        if (this.right.length <= 0) return
+        this.left += this.right.charAt(0)
+        this.right = this.right.slice(1)
+        break
+      case 'home':
+        return this.goHome()
+      case 'end':
+        return this.goEnd()
+    }
+  }
+
+  goHome() {
+    this.right = this.left + this.right
+    this.left = ''
+  }
+
+  goEnd() {
+    this.left = this.left + this.right
+    this.right = ''
+  }
+
+  editLine(ch: string, key?: KeypressKey) {
+    //TODO handle more keys (alt-left, alt-right)
+    if (!ch && key) this.handleNavigationKey(key)
+    else if (this.isBackspace(ch)) this.left = this.left.slice(0, -1)
+    else if (ch === CTRL_A) this.goHome()
+    else if (ch === CTRL_E) this.goEnd()
+    else this.left += ch
     this.showLine()
   }
 
   showLine() {
     moveCursor({ row: this.row, col: 1 })
     clearLine()
-    process.stdout.write(this.line)
+    process.stdout.write(this.left + this.right)
+    moveCursor(this.getCursorPosition())
   }
 
   getLine(): string {
-    return this.line
+    return this.left + this.right
   }
 
   getCursorPosition(): CursorPosition {
-    return { row: this.row, col: this.line.length + 1 }
+    return { row: this.row, col: this.left.length + 1 }
   }
 }
