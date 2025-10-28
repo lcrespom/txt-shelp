@@ -8,8 +8,8 @@ ZEEK_MENU_POS="3 1"
 # have fewer entries.
 ZEEK_MAX_HISTORY_LINES=1000
 
-zeek_dir="${0:A:h}"
-alias zeek='node $zeek_dir/../index.ts </dev/tty 3>&1 1>&2'
+export ZEEK_DIR="${0:A:h}"
+alias zeek='node $ZEEK_DIR/src/index.ts </dev/tty 3>&1 1>&2'
 # ------------------------- Configuration end -------------------------
 
 # Record every time the user changes directory
