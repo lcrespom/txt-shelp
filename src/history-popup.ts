@@ -27,6 +27,8 @@ export class HistoryPopup {
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
   private lineHighlighter: (line: string) => string = chalk.hex('#58d1eb')
+  private menuRow: number = 3
+  private lineEditorRow: number = 1
 
   constructor(items: string[], lineHighlighter?: (line: string) => string) {
     this.items = items
@@ -37,7 +39,7 @@ export class HistoryPopup {
   openHistoryPopup(lbuffer: string = '', rbuffer: string = '') {
     alternateScreen()
     clearScreen()
-    moveCursor({ row: Config.menuRow, col: 1 })
+    moveCursor({ row: this.menuRow, col: 1 })
     try {
       this.menu = this.createMenu()
       this.listenKeyboard(lbuffer, rbuffer)
@@ -48,10 +50,31 @@ export class HistoryPopup {
     }
   }
 
-  private createMenu() {
+  private computeDimensions() {
+    // Compute menu width and height based on terminal size and config
     const maxWidth = this.items.reduce((max, item) => Math.max(max, item.length), 0)
-    const height = Math.min(process.stdout.rows - 2, this.items.length, Config.menuHeight)
-    const width = Math.min(process.stdout.columns - 4, maxWidth + 1, Config.menuWidth)
+    const width =
+      Config.menuWidth > 0
+        ? Math.min(process.stdout.columns - 2, maxWidth + 1, Config.menuWidth)
+        : Math.min(process.stdout.columns + Config.menuWidth, maxWidth + 1)
+    const height =
+      Config.menuHeight > 0
+        ? Math.min(process.stdout.rows - 4, this.items.length, Config.menuHeight)
+        : Math.min(process.stdout.rows + Config.menuHeight, this.items.length)
+    // Compute menu row and line editor row
+    if (Config.menuRow > 0) {
+      this.menuRow = Config.menuRow
+      this.lineEditorRow = this.menuRow - 2
+    } else {
+      this.menuRow = process.stdout.rows + Config.menuRow + 1
+      this.lineEditorRow = this.menuRow - 2 //TODO show line editor under menu
+    }
+    // Return dimensions
+    return { width, height }
+  }
+
+  private createMenu() {
+    const { width, height } = this.computeDimensions()
     return tableMenu({
       items: this.items,
       height,
@@ -77,18 +100,18 @@ export class HistoryPopup {
   }
 
   private updateMenu(line: string) {
-    moveCursor({ row: Config.menuRow, col: 1 })
+    moveCursor({ row: this.menuRow, col: 1 })
     this.filteredItems = this.filterItems(this.items, line)
     if (this.filteredItems.length === 0) this.filteredItems = [NO_MATCHES]
     this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
   }
 
   private listenKeyboard(lbuffer: string, rbuffer: string) {
-    moveCursor({ row: Config.lineEditorRow, col: 1 })
+    moveCursor({ row: this.lineEditorRow, col: 1 })
     process.stdin.setRawMode(true)
     process.stdin.resume()
     keypress(process.stdin)
-    const lineEditor = new LineEditor(lbuffer, Config.lineEditorRow)
+    const lineEditor = new LineEditor(lbuffer, this.lineEditorRow)
     if (lbuffer || rbuffer) {
       this.updateMenu(lineEditor.getLine())
       lineEditor.showLine()
@@ -99,7 +122,7 @@ export class HistoryPopup {
         lineEditor.editLine(ch, key)
         this.updateMenu(lineEditor.getLine())
       } else {
-        moveCursor({ row: Config.menuRow, col: 1 })
+        moveCursor({ row: this.menuRow, col: 1 })
         this.menu.keyHandler(ch, key)
       }
       moveCursor(lineEditor.getCursorPosition())
@@ -108,9 +131,7 @@ export class HistoryPopup {
   }
 
   private multiMatch(line: string, words: string[]) {
-    for (let w of words) {
-      if (!line.includes(w)) return false
-    }
+    for (let w of words) if (!line.includes(w)) return false
     return true
   }
 

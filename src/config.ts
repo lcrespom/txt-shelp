@@ -3,7 +3,6 @@ import { join } from 'node:path'
 
 export const Config = {
   menuRow: 3,
-  lineEditorRow: 1,
   menuWidth: 80,
   menuHeight: 40,
   maxCmdHistoryLines: 1000,
@@ -37,16 +36,13 @@ export function initConfig(): boolean {
 function applyConfig(configMap: Record<string, string>) {
   if (configMap.ZEEK_MENU_ROW) {
     const row = parseInt(configMap.ZEEK_MENU_ROW, 10)
-    if (!isNaN(row)) {
-      Config.menuRow = row
-      Config.lineEditorRow = row - 2
-    }
+    if (!isNaN(row)) Config.menuRow = row
   }
   if (configMap.ZEEK_MENU_SIZE) {
-    const sizeMatch = configMap.ZEEK_MENU_SIZE.match(/^(\d+)x(\d+)$/)
-    if (sizeMatch) {
-      const width = parseInt(sizeMatch[1], 10)
-      const height = parseInt(sizeMatch[2], 10)
+    const sizes = configMap.ZEEK_MENU_SIZE.split('x')
+    if (sizes.length === 2) {
+      const width = parseInt(sizes[0], 10)
+      const height = parseInt(sizes[1], 10)
       if (!isNaN(width) && !isNaN(height)) {
         Config.menuWidth = width
         Config.menuHeight = height

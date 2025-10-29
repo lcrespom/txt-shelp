@@ -1,5 +1,5 @@
 # ------------------------- Configuration -------------------------
-# Zeek menu size, in width x height chars.
+# Zeek menu size, in width x height chars. Negative numbers indicate distance to the terminal edges.
 ZEEK_MENU_SIZE=120x40
 # Zeek menu row. Positive numbers refer to the top row, negative numbers to the bottom row.
 ZEEK_MENU_ROW=3
