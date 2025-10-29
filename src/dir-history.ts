@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-const MAX_ENTRIES = 200
+import { Config } from './config.ts'
 
 const dirHistoryPath = join(getHomeDirectory(), '.dir_history')
 
@@ -26,7 +26,7 @@ function writeDirHistoryFile(dirs: string[]) {
 export function addCwdToHistory() {
   const cwd = process.cwd()
   const dirHistory = readDirHistoryFile().filter(dir => dir != cwd)
-  if (dirHistory.length >= MAX_ENTRIES) dirHistory.shift()
+  if (dirHistory.length >= Config.maxDirHistoryLines) dirHistory.shift()
   dirHistory.push(cwd)
   writeDirHistoryFile(dirHistory)
 }

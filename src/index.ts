@@ -1,4 +1,5 @@
 import { getCommandHistory } from './cmd-history.ts'
+import { initConfig } from './config.ts'
 import { addCwdToHistory, getDirHistory } from './dir-history.ts'
 import { HistoryPopup } from './history-popup.ts'
 import { highlightCommand } from './syntax-highlight.ts'
@@ -13,6 +14,7 @@ function help() {
 
 function main() {
   const command = getCommand()
+  initConfig()
   switch (command) {
     case 'help':
       help()

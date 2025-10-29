@@ -15,12 +15,12 @@ import {
   normalScreen,
   showCursor
 } from './terminal.ts'
+import { Config } from './config.ts'
 
 // TODO read from configuration file
-const LINE_EDITOR_ROW = 1
-const MENU_ROW = 3
 const MENU_BG_COLOR = '#1d1e1a'
 const MENU_BG_SEL_COLOR = '#4a483a'
+const NO_MATCHES = '# 🤷 No matches'
 
 export class HistoryPopup {
   private items: string[] = []
@@ -37,7 +37,7 @@ export class HistoryPopup {
   openHistoryPopup(lbuffer: string = '', rbuffer: string = '') {
     alternateScreen()
     clearScreen()
-    moveCursor({ row: MENU_ROW, col: 1 })
+    moveCursor({ row: Config.menuRow, col: 1 })
     try {
       this.menu = this.createMenu()
       this.listenKeyboard(lbuffer, rbuffer)
@@ -50,8 +50,8 @@ export class HistoryPopup {
 
   private createMenu() {
     const maxWidth = this.items.reduce((max, item) => Math.max(max, item.length), 0)
-    const height = Math.min(process.stdout.rows - 10, this.items.length)
-    const width = Math.min(process.stdout.columns - 5, maxWidth + 1)
+    const height = Math.min(process.stdout.rows - 2, this.items.length, Config.menuHeight)
+    const width = Math.min(process.stdout.columns - 4, maxWidth + 1, Config.menuWidth)
     return tableMenu({
       items: this.items,
       height,
@@ -77,18 +77,18 @@ export class HistoryPopup {
   }
 
   private updateMenu(line: string) {
-    moveCursor({ row: MENU_ROW, col: 1 })
+    moveCursor({ row: Config.menuRow, col: 1 })
     this.filteredItems = this.filterItems(this.items, line)
-    if (this.filteredItems.length === 0) this.filteredItems = ['# 🤷 No matches']
+    if (this.filteredItems.length === 0) this.filteredItems = [NO_MATCHES]
     this.menu.update({ items: this.filteredItems, selection: this.filteredItems.length - 1 })
   }
 
   private listenKeyboard(lbuffer: string, rbuffer: string) {
-    moveCursor({ row: LINE_EDITOR_ROW, col: 1 })
+    moveCursor({ row: Config.lineEditorRow, col: 1 })
     process.stdin.setRawMode(true)
     process.stdin.resume()
     keypress(process.stdin)
-    const lineEditor = new LineEditor(lbuffer, LINE_EDITOR_ROW)
+    const lineEditor = new LineEditor(lbuffer, Config.lineEditorRow)
     if (lbuffer || rbuffer) {
       this.updateMenu(lineEditor.getLine())
       lineEditor.showLine()
@@ -99,7 +99,7 @@ export class HistoryPopup {
         lineEditor.editLine(ch, key)
         this.updateMenu(lineEditor.getLine())
       } else {
-        moveCursor({ row: MENU_ROW, col: 1 })
+        moveCursor({ row: Config.menuRow, col: 1 })
         this.menu.keyHandler(ch, key)
       }
       moveCursor(lineEditor.getCursorPosition())
@@ -122,7 +122,7 @@ export class HistoryPopup {
   private menuDone(line?: string) {
     normalScreen()
     showCursor()
-    if (line) {
+    if (line && line !== NO_MATCHES) {
       const fd3 = fs.openSync('/dev/fd/3', 'w')
       fs.writeSync(fd3, line)
       fs.closeSync(fd3)

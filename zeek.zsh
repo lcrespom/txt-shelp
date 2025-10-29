@@ -1,12 +1,17 @@
 # ------------------------- Configuration -------------------------
 # Zeek menu size, in width x height chars.
-ZEEK_MENU_SIZE="80x40"
-# Zeek menu position. Positive numbers refer to the top left corner, negative numbers to the bottom right.
-ZEEK_MENU_POS="3 1"
+ZEEK_MENU_SIZE=120x40
+# Zeek menu row. Positive numbers refer to the top row, negative numbers to the bottom row.
+ZEEK_MENU_ROW=3
 
-# Maximun number of history lines to get from zsh. Duplicates are removed, so the history popup will probably
-# have fewer entries.
-ZEEK_MAX_HISTORY_LINES=1000
+# Maximun number of command history lines to get from zsh. Duplicates are removed, so the history popup
+# will probably have fewer entries.
+ZEEK_MAX_CMD_HISTORY_LINES=2000
+
+# Maximun number of directory history lines to get from zsh. Duplicates are not stored, so the directory
+# history popup will have exactly this many entries (or fewer, if not that many directories have been
+# visited).
+ZEEK_MAX_DIR_HISTORY_LINES=200
 
 export ZEEK_DIR="${0:A:h}"
 alias zeek='node $ZEEK_DIR/src/index.ts </dev/tty 3>&1 1>&2'

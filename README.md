@@ -7,6 +7,7 @@
         replacement
   - [ ] Underline builtins
   - [ ] Use which when possible (check performance)
+  - [ ] Place menu at bottom (negative row config)
   - Filter history
     - [x] Interactive line editor to filter
     - [x] Fix bug: empty item list
@@ -31,4 +32,4 @@
   - [x] Capture all exceptions and show cursor before exiting
   - [x] Use alternate screen buffer
   - [x] Other navigation shortcuts
-  - [ ] Read configuration from config file
+  - [x] Read configuration from config file

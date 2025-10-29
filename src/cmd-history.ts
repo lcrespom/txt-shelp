@@ -1,9 +1,9 @@
 import { execSync } from 'node:child_process'
 import { join } from 'node:path'
 
-// TODO read from configuration file
+import { Config } from './config.ts'
+
 const HISTORY_FILE = '.zsh_history'
-const MAX_HISTORY_LINES = 1000
 
 function removeTimestamp(line: string): string {
   const timestampRegex = /^:?\s?\d+:\d+;/
@@ -16,7 +16,9 @@ function removeDuplicates(lines: string[]): string[] {
 
 export function getCommandHistory(): string[] {
   const historyPath = join(process.env.HOME || process.env.USERPROFILE || '', HISTORY_FILE)
-  const output = execSync(`tail -n ${MAX_HISTORY_LINES} "${historyPath}"`, { encoding: 'utf-8' })
+  const output = execSync(`tail -n ${Config.maxCmdHistoryLines} "${historyPath}"`, {
+    encoding: 'utf-8'
+  })
   return removeDuplicates(
     output
       .split('\n: ')
