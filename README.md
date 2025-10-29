@@ -15,8 +15,8 @@
           end, delete...)
     - [x] Gather initial buffer and use for initial filter
     - [x] Fuzzy filter, shelp style
+    - [x] Support placing line editor at the bottom of the menu
     - [ ] Fix command parser bug: some commands fail to parse
-    - [ ] Place line editor at the bottom of the menu
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines

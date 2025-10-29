@@ -64,7 +64,7 @@ export class HistoryPopup {
     // Compute menu row and line editor row
     this.menuRow =
       Config.menuRow > 0 ? Config.menuRow : process.stdout.rows + Config.menuRow - height
-    this.lineEditorRow = this.menuRow - 2 //TODO show line editor under menu
+    this.lineEditorRow = Config.lineEditOverMenu ? this.menuRow - 2 : this.menuRow + height + 1
     // Return dimensions
     return { width, height }
   }
@@ -116,8 +116,13 @@ export class HistoryPopup {
     process.stdin.on('keypress', async (ch, key) => {
       hideCursor()
       if (lineEditor.isLineEditKey(ch, key)) {
-        lineEditor.editLine(ch, key)
-        this.updateMenu(lineEditor.getLine())
+        if (Config.lineEditOverMenu) {
+          lineEditor.editLine(ch, key)
+          this.updateMenu(lineEditor.getLine())
+        } else {
+          this.updateMenu(lineEditor.getLine())
+          lineEditor.editLine(ch, key)
+        }
       } else {
         moveCursor({ row: this.menuRow, col: 1 })
         this.menu.keyHandler(ch, key)

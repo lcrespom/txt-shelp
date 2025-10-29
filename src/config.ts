@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 export const Config = {
-  menuRow: 3,
+  menuRow: 1,
+  lineEditOverMenu: false,
   menuWidth: 80,
   menuHeight: 40,
   maxCmdHistoryLines: 1000,
@@ -48,6 +49,10 @@ function applyConfig(configMap: Record<string, string>) {
         Config.menuHeight = height
       }
     }
+  }
+  if (configMap.ZEEK_LINE_EDIT_OVER_MENU) {
+    const val = configMap.ZEEK_LINE_EDIT_OVER_MENU.toLowerCase()
+    Config.lineEditOverMenu = val === 'true' || val === '1' || val === 'yes'
   }
   if (configMap.ZEEK_MAX_CMD_HISTORY_LINES) {
     const maxCmdLines = parseInt(configMap.ZEEK_MAX_CMD_HISTORY_LINES, 10)
