@@ -62,13 +62,9 @@ export class HistoryPopup {
         ? Math.min(process.stdout.rows - 4, this.items.length, Config.menuHeight)
         : Math.min(process.stdout.rows + Config.menuHeight, this.items.length)
     // Compute menu row and line editor row
-    if (Config.menuRow > 0) {
-      this.menuRow = Config.menuRow
-      this.lineEditorRow = this.menuRow - 2
-    } else {
-      this.menuRow = process.stdout.rows + Config.menuRow - height
-      this.lineEditorRow = this.menuRow - 2 //TODO show line editor under menu
-    }
+    this.menuRow =
+      Config.menuRow > 0 ? Config.menuRow : process.stdout.rows + Config.menuRow - height
+    this.lineEditorRow = this.menuRow - 2 //TODO show line editor under menu
     // Return dimensions
     return { width, height }
   }
