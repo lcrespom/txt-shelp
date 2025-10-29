@@ -66,7 +66,7 @@ export class HistoryPopup {
       this.menuRow = Config.menuRow
       this.lineEditorRow = this.menuRow - 2
     } else {
-      this.menuRow = process.stdout.rows + Config.menuRow + 1
+      this.menuRow = process.stdout.rows + Config.menuRow - height
       this.lineEditorRow = this.menuRow - 2 //TODO show line editor under menu
     }
     // Return dimensions
@@ -75,6 +75,7 @@ export class HistoryPopup {
 
   private createMenu() {
     const { width, height } = this.computeDimensions()
+    moveCursor({ row: this.menuRow, col: 1 })
     return tableMenu({
       items: this.items,
       height,
