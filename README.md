@@ -21,6 +21,7 @@
     - [x] Shell parser
     - [x] Syntax highlight lines
     - [x] Show syntax highlight in selection, just change background
+    - [x] Highlight full line
     - [ ] Highlight matched text (complex)
     - [ ] Make palette configurable
     - [ ] memoize highlighted lines => just memoize which, when implemented

@@ -80,7 +80,7 @@ export class HistoryPopup {
       columnWidth: width,
       scrollBarCol: width + 1,
       selection: this.items.length - 1,
-      colors: this.getColors(),
+      colors: this.getColors(width),
       done: (item: number) => {
         const line = item >= 0 ? this.filteredItems[item] : undefined
         this.menuDone(line)
@@ -88,12 +88,12 @@ export class HistoryPopup {
     })
   }
 
-  private getColors() {
+  private getColors(width: number) {
     const itemBGfunc = bgColorFunc(MENU_BG_COLOR)
     const selBGfunc = bgColorFunc(MENU_BG_SEL_COLOR)
     return {
-      item: (i: string) => itemBGfunc(this.lineHighlighter(i)),
-      selectedItem: (i: string) => selBGfunc(this.lineHighlighter(i)),
+      item: (i: string) => itemBGfunc(this.lineHighlighter(i.padEnd(width))),
+      selectedItem: (i: string) => selBGfunc(this.lineHighlighter(i.padEnd(width))),
       scrollArea: itemBGfunc,
       scrollBar: fgColorFunc('#ffffff')
     }
