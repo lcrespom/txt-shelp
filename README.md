@@ -21,6 +21,7 @@
     - [x] Shell parser
     - [x] Syntax highlight lines
     - [x] Show syntax highlight in selection, just change background
+    - [x] Highlight full line
     - [ ] Highlight matched text (complex)
     - [ ] Make palette configurable
     - [ ] memoize highlighted lines => just memoize which, when implemented
@@ -33,3 +34,4 @@
   - [x] Use alternate screen buffer
   - [x] Other navigation shortcuts
   - [x] Read configuration from config file
+  - [x] Fix chalk bug: use own RGB function => get rid of chalk
