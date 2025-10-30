@@ -33,3 +33,4 @@
   - [x] Use alternate screen buffer
   - [x] Other navigation shortcuts
   - [x] Read configuration from config file
+  - [x] Fix chalk bug: use own RGB function => get rid of chalk

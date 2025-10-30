@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import chalk from 'chalk'
 // @ts-expect-error - CommonJS module without types
 import keypress from 'keypress'
 import './table-menu.d.ts'
@@ -9,7 +8,9 @@ import type { TableMenuInstance } from 'node-terminal-menu'
 import { LineEditor } from './line-editor.ts'
 import {
   alternateScreen,
+  bgColorFunc,
   clearScreen,
+  fgColorFunc,
   hideCursor,
   moveCursor,
   normalScreen,
@@ -26,7 +27,7 @@ export class HistoryPopup {
   private items: string[] = []
   private filteredItems: string[] = []
   private menu: TableMenuInstance = {} as TableMenuInstance
-  private lineHighlighter: (line: string) => string = chalk.hex('#58d1eb')
+  private lineHighlighter: (line: string) => string = fgColorFunc('#58d1eb')
   private menuRow: number = 3
   private lineEditorRow: number = 1
 
@@ -88,11 +89,13 @@ export class HistoryPopup {
   }
 
   private getColors() {
+    const itemBGfunc = bgColorFunc(MENU_BG_COLOR)
+    const selBGfunc = bgColorFunc(MENU_BG_SEL_COLOR)
     return {
-      item: (i: string) => chalk.bgHex(MENU_BG_COLOR)(this.lineHighlighter(i)),
-      selectedItem: (i: string) => chalk.bgHex(MENU_BG_SEL_COLOR)(this.lineHighlighter(i)),
-      scrollArea: chalk.bgHex(MENU_BG_COLOR),
-      scrollBar: chalk.whiteBright
+      item: (i: string) => itemBGfunc(this.lineHighlighter(i)),
+      selectedItem: (i: string) => selBGfunc(this.lineHighlighter(i)),
+      scrollArea: itemBGfunc,
+      scrollBar: fgColorFunc('#ffffff')
     }
   }
 

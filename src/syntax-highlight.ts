@@ -1,7 +1,6 @@
-import chalk from 'chalk'
-
 import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser/parser.ts'
 import type { BashAstNode, ExpansionType } from './bash-parser/parser-types.ts'
+import { fgColorFunc } from './terminal.ts'
 
 type TextHighlight = {
   type: number
@@ -82,28 +81,25 @@ function highlight(line: string) {
   return hls
 }
 
-function applyColor(chunk: string, hl: TextHighlight) {
-  const hlColors = {
-    unknown: 'reset',
-    program: '#a6e22e', // Green monokai (originally 'green')
-    builtin: '#a6e22e', // TODO add underline (originally 'green')
-    command: 'green',
-    alias: '#a6e22e', // TODO add underline (originally 'green')
-    commandError: '#f92672', // Fuchsia monokai (originally 'redBright')
-    assignment: 'magentaBright',
-    redirect: 'whiteBright',
-    parameter: '#66d9ef', // Cyan monokai (originally 'cyan')
-    environment: '#e6db74', // VSCode monokai yellow (originally 'magenta')
-    option: '#ae81ff', // Purple monkai (originally 'cyanBright')
-    quote: '#fd971f', // Orange monokai (originally 'yellow'),
-    comment: '#666666' // Dark grey (originally 'blue')
-  }
+const HLColorFuncs = {
+  unknown: fgColorFunc('reset'),
+  program: fgColorFunc('#a6e22e'), // Green monokai (originally 'green')
+  builtin: fgColorFunc('#a6e22e'), // TODO add underline (originally 'green')
+  command: fgColorFunc('green'),
+  alias: fgColorFunc('#a6e22e'), // TODO add underline (originally 'green')
+  commandError: fgColorFunc('#f92672'), // Fuchsia monokai (originally 'redBright')
+  assignment: fgColorFunc('#ff00ff'),
+  redirect: fgColorFunc('#ffffff'),
+  parameter: fgColorFunc('#66d9ef'), // Cyan monokai (originally 'cyan')
+  environment: fgColorFunc('#e6db74'), // VSCode monokai yellow (originally 'magenta')
+  option: fgColorFunc('#ae81ff'), // Purple monkai (originally 'cyanBright')
+  quote: fgColorFunc('#fd971f'), // Orange monokai (originally 'yellow'),
+  comment: fgColorFunc('#666666') // Dark grey (originally 'blue')
+}
 
-  let colorName = hlColors[NodeTypeNames[hl.type]] as keyof typeof chalk
-  if (colorName.startsWith('#')) return chalk.hex(colorName)(chunk)
-  const maybeFn = (chalk as any)[colorName]
-  if (typeof maybeFn === 'function') return maybeFn(chunk)
-  return chalk.reset(chunk)
+function applyColor(chunk: string, hl: TextHighlight) {
+  let colorFunc = HLColorFuncs[NodeTypeNames[hl.type]]
+  return colorFunc(chunk)
 }
 
 function colorize(line: string, hls: TextHighlight[], colorFunc = applyColor) {
