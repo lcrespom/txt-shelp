@@ -6,6 +6,7 @@
   - [x] Create shell script to register keyboard shortcuts and buffer
         replacement
   - [x] Place menu at bottom (negative row config)
+  - [x] Support multi-line commands
   - [ ] Underline builtins
   - [ ] Use which when possible (check performance)
   - Filter history

@@ -17,6 +17,7 @@ import {
   showCursor
 } from './terminal.ts'
 import { Config } from './config.ts'
+import { GRAPHIC_NEWLINE } from './cmd-history.ts'
 
 // TODO read from configuration file
 const MENU_BG_COLOR = '#1d1e1a'
@@ -146,7 +147,7 @@ export class HistoryPopup {
     showCursor()
     if (line && line !== NO_MATCHES) {
       const fd3 = fs.openSync('/dev/fd/3', 'w')
-      fs.writeSync(fd3, line)
+      fs.writeSync(fd3, line.replaceAll(GRAPHIC_NEWLINE, '\n'))
       fs.closeSync(fd3)
     }
     process.exit(0)

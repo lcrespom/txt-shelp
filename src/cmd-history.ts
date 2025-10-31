@@ -3,6 +3,7 @@ import { join } from 'node:path'
 
 import { Config } from './config.ts'
 
+export const GRAPHIC_NEWLINE = '↵'
 const HISTORY_FILE = '.zsh_history'
 
 function removeTimestamp(line: string): string {
@@ -21,8 +22,9 @@ export function getCommandHistory(): string[] {
   })
   return removeDuplicates(
     output
+      .trimEnd()
       .split('\n: ')
-      .map(item => item.split('\n').join(''))
+      .map(item => item.split('\\\n').join(GRAPHIC_NEWLINE))
       .map(removeTimestamp)
   )
 }
