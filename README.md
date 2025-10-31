@@ -28,6 +28,9 @@
   - [x] Create shell script part to add dirs to ~/.dir_history
   - [x] Implement menu
   - [x] `cd` to selection
+- File completion
+  - [ ] Replicate nash look&feel
+  - [ ] Directory navigation
 - Misc
   - [x] Capture all exceptions and show cursor before exiting
   - [x] Use alternate screen buffer
@@ -39,5 +42,5 @@
   - [x] Fix chalk bug: use own RGB function => get rid of chalk
   - [ ] Fix menu bug: duplicate last line when ZEEK_MENU_ROW=1
     - Currently fixed with workaround: if ZEEK_MENU_ROW=1, then set it to 2
-  - [ ] Fix command parser bug: some commands fail to parse, e.g. pipes and
-        redirects
+  - [ ] Fix syntax highlight bug: some commands fail to highlight, e.g. pipes
+        and redirects
