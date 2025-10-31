@@ -5,18 +5,16 @@
   - [x] Remove duplicates
   - [x] Create shell script to register keyboard shortcuts and buffer
         replacement
+  - [x] Place menu at bottom (negative row config)
   - [ ] Underline builtins
   - [ ] Use which when possible (check performance)
-  - [ ] Place menu at bottom (negative row config)
   - Filter history
     - [x] Interactive line editor to filter
-    - [x] Fix bug: empty item list
     - [x] Full keyboard support in interactive line editor (left, right, home,
           end, delete...)
     - [x] Gather initial buffer and use for initial filter
     - [x] Fuzzy filter, shelp style
     - [x] Support placing line editor at the bottom of the menu
-    - [ ] Fix command parser bug: some commands fail to parse
   - Colors
     - [x] Shell parser
     - [x] Syntax highlight lines
@@ -34,4 +32,11 @@
   - [x] Use alternate screen buffer
   - [x] Other navigation shortcuts
   - [x] Read configuration from config file
+  - [ ] Documentation
+- Bugs
+  - [x] Fix bug: empty item list
   - [x] Fix chalk bug: use own RGB function => get rid of chalk
+  - [ ] Fix menu bug: duplicate last line when ZEEK_MENU_ROW=1
+    - Currently fixed with workaround: if ZEEK_MENU_ROW=1, then set it to 2
+  - [ ] Fix command parser bug: some commands fail to parse, e.g. pipes and
+        redirects

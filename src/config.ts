@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 export const Config = {
-  menuRow: 1,
+  menuRow: 2,
   lineEditOverMenu: false,
   menuWidth: 80,
   menuHeight: 40,
@@ -38,6 +38,7 @@ function applyConfig(configMap: Record<string, string>) {
   if (configMap.ZEEK_MENU_ROW) {
     const row = parseInt(configMap.ZEEK_MENU_ROW, 10)
     if (!isNaN(row)) Config.menuRow = row
+    if (Config.menuRow == 1) Config.menuRow = 2 // Nasty table-menu bug
   }
   if (configMap.ZEEK_MENU_SIZE) {
     const sizes = configMap.ZEEK_MENU_SIZE.split('x')

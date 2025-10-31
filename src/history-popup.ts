@@ -119,13 +119,9 @@ export class HistoryPopup {
     process.stdin.on('keypress', async (ch, key) => {
       hideCursor()
       if (lineEditor.isLineEditKey(ch, key)) {
-        if (Config.lineEditOverMenu) {
-          lineEditor.editLine(ch, key)
-          this.updateMenu(lineEditor.getLine())
-        } else {
-          this.updateMenu(lineEditor.getLine())
-          lineEditor.editLine(ch, key)
-        }
+        lineEditor.editLine(ch, key)
+        this.updateMenu(lineEditor.getLine())
+        if (!Config.lineEditOverMenu) lineEditor.showLine()
       } else {
         moveCursor({ row: this.menuRow, col: 1 })
         this.menu.keyHandler(ch, key)

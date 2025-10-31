@@ -5,7 +5,7 @@ ZEEK_MENU_SIZE=120x40
 ZEEK_MENU_ROW=2
 # Line editor position relative to the menu. If true, the line editor will be shown above the menu;
 # if false, it will be shown below the menu.
-ZEEK_LINE_EDIT_OVER_MENU=true
+ZEEK_LINE_EDIT_OVER_MENU=false
 
 # Maximun number of command history lines to get from zsh. Duplicates are removed, so the history popup
 # will probably have fewer entries.
