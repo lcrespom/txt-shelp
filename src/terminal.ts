@@ -66,9 +66,3 @@ export function underline(s: string) {
   const UNDERLINE_END = '\x1b[24m'
   return UNDERLINE_START + s + UNDERLINE_END
 }
-
-export type TextDecorator = (s: string) => string
-
-export function composeTextDecorators(f: TextDecorator, g: TextDecorator) {
-  return (s: string) => g(f(s))
-}
