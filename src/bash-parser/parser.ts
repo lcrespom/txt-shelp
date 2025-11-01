@@ -67,7 +67,7 @@ function reverseObject(obj: Record<string, any>) {
 export type BashNodeCB = (node: BashAstNode) => void
 
 export function traverseAST(node: BashAstNode, nodeCB: BashNodeCB) {
-  if (node.type == 'Script' && node.commands) {
+  if (node.type == 'Script' || node.type == 'Pipeline' || node.type == 'CompoundList') {
     for (let cmd of node.commands) traverseAST(cmd, nodeCB)
   } else if (node.type == 'LogicalExpression') {
     traverseAST(node.left, nodeCB)

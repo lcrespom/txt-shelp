@@ -42,5 +42,6 @@
   - [x] Fix chalk bug: use own RGB function => get rid of chalk
   - [ ] Fix menu bug: duplicate last line when ZEEK_MENU_ROW=1
     - Currently fixed with workaround: if ZEEK_MENU_ROW=1, then set it to 2
-  - [ ] Fix syntax highlight bug: some commands fail to highlight, e.g. pipes
-        and redirects
+  - Fix syntax highlight bug: some commands fail to highlight
+    - [x] Pipes
+    - [ ] Files in redirects

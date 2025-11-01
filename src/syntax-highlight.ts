@@ -70,7 +70,7 @@ function highlightComment(line: string, ast: BashAstNode, hls: TextHighlight[]) 
   }
 }
 
-function highlight(line: string) {
+export function highlight(line: string) {
   let ast = parseBash(line)
   let hls: TextHighlight[] = []
   if (!ast) return hls
