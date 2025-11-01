@@ -7,7 +7,7 @@
         replacement
   - [x] Place menu at bottom (negative row config)
   - [x] Support multi-line commands
-  - [ ] Underline builtins
+  - [x] Underline builtins
   - [ ] Use which when possible (check performance)
   - Filter history
     - [x] Interactive line editor to filter

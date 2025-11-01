@@ -1,6 +1,6 @@
 import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser/parser.ts'
 import type { BashAstNode, ExpansionType } from './bash-parser/parser-types.ts'
-import { fgColorFunc } from './terminal.ts'
+import { composeStringDecorators, fgColorFunc, underline } from './terminal.ts'
 
 type TextHighlight = {
   type: number
@@ -83,18 +83,18 @@ function highlight(line: string) {
 
 const HLColorFuncs = {
   unknown: fgColorFunc('reset'),
-  program: fgColorFunc('#a6e22e'), // Green monokai (originally 'green')
-  builtin: fgColorFunc('#a6e22e'), // TODO add underline (originally 'green')
+  program: fgColorFunc('#a6e22e'), // Green monokai
+  builtin: composeStringDecorators(underline, fgColorFunc('#a6e22e')),
   command: fgColorFunc('green'),
-  alias: fgColorFunc('#a6e22e'), // TODO add underline (originally 'green')
-  commandError: fgColorFunc('#f92672'), // Fuchsia monokai (originally 'redBright')
+  alias: composeStringDecorators(underline, fgColorFunc('#a6e22e')),
+  commandError: fgColorFunc('#f92672'), // Fuchsia monokai
   assignment: fgColorFunc('#ff00ff'),
   redirect: fgColorFunc('#ffffff'),
-  parameter: fgColorFunc('#66d9ef'), // Cyan monokai (originally 'cyan')
-  environment: fgColorFunc('#e6db74'), // VSCode monokai yellow (originally 'magenta')
-  option: fgColorFunc('#ae81ff'), // Purple monkai (originally 'cyanBright')
-  quote: fgColorFunc('#fd971f'), // Orange monokai (originally 'yellow'),
-  comment: fgColorFunc('#666666') // Dark grey (originally 'blue')
+  parameter: fgColorFunc('#66d9ef'), // Cyan monokai
+  environment: fgColorFunc('#e6db74'), // VSCode monokai yellow
+  option: fgColorFunc('#ae81ff'), // Purple monkai
+  quote: fgColorFunc('#fd971f'), // Orange monokai
+  comment: fgColorFunc('#666666') // Dark grey
 }
 
 function applyColor(chunk: string, hl: TextHighlight) {
