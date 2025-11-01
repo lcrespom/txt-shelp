@@ -1,6 +1,6 @@
 import { NodeType, NodeTypeNames, builtins, parseBash, traverseAST } from './bash-parser/parser.ts'
 import type { BashAstNode, ExpansionType } from './bash-parser/parser-types.ts'
-import { composeStringDecorators, fgColorFunc, underline } from './terminal.ts'
+import { composeTextDecorators, fgColorFunc, underline } from './terminal.ts'
 
 type TextHighlight = {
   type: number
@@ -84,9 +84,9 @@ function highlight(line: string) {
 const HLColorFuncs = {
   unknown: fgColorFunc('reset'),
   program: fgColorFunc('#a6e22e'), // Green monokai
-  builtin: composeStringDecorators(underline, fgColorFunc('#a6e22e')),
+  builtin: composeTextDecorators(underline, fgColorFunc('#a6e22e')),
   command: fgColorFunc('green'),
-  alias: composeStringDecorators(underline, fgColorFunc('#a6e22e')),
+  alias: composeTextDecorators(underline, fgColorFunc('#a6e22e')),
   commandError: fgColorFunc('#f92672'), // Fuchsia monokai
   assignment: fgColorFunc('#ff00ff'),
   redirect: fgColorFunc('#ffffff'),

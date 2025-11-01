@@ -67,8 +67,8 @@ export function underline(s: string) {
   return UNDERLINE_START + s + UNDERLINE_END
 }
 
-export type StringDecorator = (s: string) => string
+export type TextDecorator = (s: string) => string
 
-export function composeStringDecorators(f: StringDecorator, g: StringDecorator) {
+export function composeTextDecorators(f: TextDecorator, g: TextDecorator) {
   return (s: string) => g(f(s))
 }
