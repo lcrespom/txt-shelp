@@ -43,9 +43,9 @@ Zeek provides three main features:
 
 ### Installation
 
-Simply clone this repository. To enable Zeek features, you need to source `zeek.zsh`, i.e. run
-`source [zeek-install-path]/zeek.zsh` from the zsh command line. To enable Zeek for all your future
-zsh sessions, add the line
+Simply clone this repository, then cd to it and run `npm install`. To enable Zeek features, you need
+to source `zeek.zsh`, i.e. run `source [zeek-install-path]/zeek.zsh` from the zsh command line. To
+enable Zeek for all your future zsh sessions, add the line
 
 ```zsh
 source [zeek-install-path]/zeek.zsh
